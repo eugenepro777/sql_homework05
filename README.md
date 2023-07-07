@@ -1,0 +1,2133 @@
+# Урок 5
+
+## **SQL – оконные функции**
+
+---
+
+### **Основное ДЗ из презентации**
+
+**Таблица cars.**
+
+![Созданная таблица](cars.PNG "Машины")
+
+**1.    Создайте представление, в которое попадут автомобили стоимостью  до 25 000 долларов.**
+
+![Пример решения](./cost_less_25000.PNG "Машины до 25000")
+
+---
+
+**2.    Изменить в существующем представлении порог для стоимости: пусть цена будет до 30 000 долларов (используя оператор OR REPLACE).**
+
+![Пример решения](./cost_increased_30000.PNG "Машины до 30000")
+
+---
+
+**3.    Создайте представление, в котором будут только автомобили марки “Skoda” и “Audi”.**
+
+![Пример решения](./select_brands.PNG "Марки “Skoda” и “Audi”")
+
+---
+
+**Таблица train_shedule.**
+
+![Созданная таблица](./station_time.PNG "Время прибытия на станцию")
+
+---
+
+**Добавьте новый столбец под названием «время до следующей станции».**
+**Чтобы получить это значение, мы вычитаем время станций для пар смежных станций.**
+
+- **Мы можем вычислить это значение  без использования оконной функции SQL, но это может быть очень сложно. Проще это сделать с помощью оконной функции LEAD. Эта функция сравнивает значения из одной строки со следующей строкой, чтобы получить результат. В этом случае функция сравнивает значения в столбце «время» для станции со станцией сразу после нее.**
+
+![Пример решения](./time_between_stations.PNG "Обновленное расписание поездов")
+
+---
+
+### **Дополнительное задание**
+
+**Для скрипта, поставленного в прошлом уроке (vk_db только с расширенными данными).**
+
+- **Получите друзей пользователя с id=1 (решение задачи с помощью представления “друзья”).**
+
+![Пример решения](./friends_user_1.PNG "Друзья первого пользователя")
+
+---
+
+- **Создайте представление, в котором будут выводится все сообщения, в которых принимал участие пользователь с id = 1.**
+
+![Пример решения](./all_messages_id1.PNG "Все сообщения с первым пользователем")
+
+---
+
+- **Получите список медиафайлов пользователя с количеством лайков(media m, likes l ,users u).**
+
+![Пример решения](./media_with_likes.PNG "Список медиафайлов пользователей с количеством лайков")
+
+---
+
+- **Получите количество групп у пользователей.**
+
+[Пример решения отдельной страницей](./group_count.html "Список групп пользователей")
+
+**_Таблица с выборкой_**
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"><title>Data</title>
+</head>
+<body>
+<table border=1>
+<tr>
+<td bgcolor=silver class='medium'>user_id</td>
+<td bgcolor=silver class='medium'>firstname</td>
+<td bgcolor=silver class='medium'>lastname</td>
+<td bgcolor=silver class='medium'>group_count</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>1</td>
+<td class='normal' valign='top'>Reuben</td>
+<td class='normal' valign='top'>Nienow</td>
+<td class='normal' valign='top'>3</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>2</td>
+<td class='normal' valign='top'>Frederik</td>
+<td class='normal' valign='top'>Upton</td>
+<td class='normal' valign='top'>2</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>3</td>
+<td class='normal' valign='top'>Unique</td>
+<td class='normal' valign='top'>Windler</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>4</td>
+<td class='normal' valign='top'>Norene</td>
+<td class='normal' valign='top'>West</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>5</td>
+<td class='normal' valign='top'>Frederick</td>
+<td class='normal' valign='top'>Effertz</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>6</td>
+<td class='normal' valign='top'>Victoria</td>
+<td class='normal' valign='top'>Medhurst</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>7</td>
+<td class='normal' valign='top'>Austyn</td>
+<td class='normal' valign='top'>Braun</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>8</td>
+<td class='normal' valign='top'>Jaida</td>
+<td class='normal' valign='top'>Kilback</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>9</td>
+<td class='normal' valign='top'>Mireya</td>
+<td class='normal' valign='top'>Orn</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>10</td>
+<td class='normal' valign='top'>Jordyn</td>
+<td class='normal' valign='top'>Jerde</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>11</td>
+<td class='normal' valign='top'>Thad</td>
+<td class='normal' valign='top'>McDermott</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>12</td>
+<td class='normal' valign='top'>Aiden</td>
+<td class='normal' valign='top'>Runolfsdottir</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>13</td>
+<td class='normal' valign='top'>Bernadette</td>
+<td class='normal' valign='top'>Haag</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>14</td>
+<td class='normal' valign='top'>Dedric</td>
+<td class='normal' valign='top'>Stanton</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>15</td>
+<td class='normal' valign='top'>Clare</td>
+<td class='normal' valign='top'>Wolff</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>16</td>
+<td class='normal' valign='top'>Lina</td>
+<td class='normal' valign='top'>Macejkovic</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>17</td>
+<td class='normal' valign='top'>Jerrell</td>
+<td class='normal' valign='top'>Stanton</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>18</td>
+<td class='normal' valign='top'>Golden</td>
+<td class='normal' valign='top'>Wisozk</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>19</td>
+<td class='normal' valign='top'>Elisa</td>
+<td class='normal' valign='top'>Balistreri</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>20</td>
+<td class='normal' valign='top'>Reed</td>
+<td class='normal' valign='top'>Bogan</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>21</td>
+<td class='normal' valign='top'>Gwendolyn</td>
+<td class='normal' valign='top'>McClure</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>22</td>
+<td class='normal' valign='top'>Luz</td>
+<td class='normal' valign='top'>Bailey</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>23</td>
+<td class='normal' valign='top'>Alyce</td>
+<td class='normal' valign='top'>Toy</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>24</td>
+<td class='normal' valign='top'>Oma</td>
+<td class='normal' valign='top'>Ortiz</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>25</td>
+<td class='normal' valign='top'>Valentine</td>
+<td class='normal' valign='top'>Goldner</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>26</td>
+<td class='normal' valign='top'>Rasheed</td>
+<td class='normal' valign='top'>Ebert</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>27</td>
+<td class='normal' valign='top'>Misael</td>
+<td class='normal' valign='top'>Lakin</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>28</td>
+<td class='normal' valign='top'>Shaun</td>
+<td class='normal' valign='top'>Fritsch</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>29</td>
+<td class='normal' valign='top'>Katarina</td>
+<td class='normal' valign='top'>Sipes</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>30</td>
+<td class='normal' valign='top'>Newton</td>
+<td class='normal' valign='top'>Koss</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>31</td>
+<td class='normal' valign='top'>Selmer</td>
+<td class='normal' valign='top'>Quitzon</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>32</td>
+<td class='normal' valign='top'>Margarete</td>
+<td class='normal' valign='top'>Koepp</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>33</td>
+<td class='normal' valign='top'>Donavon</td>
+<td class='normal' valign='top'>Bauch</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>34</td>
+<td class='normal' valign='top'>Ashlynn</td>
+<td class='normal' valign='top'>Cummerata</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>35</td>
+<td class='normal' valign='top'>Fletcher</td>
+<td class='normal' valign='top'>Lang</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>36</td>
+<td class='normal' valign='top'>Amiya</td>
+<td class='normal' valign='top'>Leuschke</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>37</td>
+<td class='normal' valign='top'>Terrance</td>
+<td class='normal' valign='top'>West</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>38</td>
+<td class='normal' valign='top'>Keara</td>
+<td class='normal' valign='top'>Kiehn</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>39</td>
+<td class='normal' valign='top'>Wyatt</td>
+<td class='normal' valign='top'>Olson</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>40</td>
+<td class='normal' valign='top'>Paula</td>
+<td class='normal' valign='top'>Shields</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>41</td>
+<td class='normal' valign='top'>Ivah</td>
+<td class='normal' valign='top'>Bernier</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>42</td>
+<td class='normal' valign='top'>Liza</td>
+<td class='normal' valign='top'>Howe</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>43</td>
+<td class='normal' valign='top'>Kevon</td>
+<td class='normal' valign='top'>Gerhold</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>44</td>
+<td class='normal' valign='top'>Hermina</td>
+<td class='normal' valign='top'>Lubowitz</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>45</td>
+<td class='normal' valign='top'>Cara</td>
+<td class='normal' valign='top'>Quigley</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>46</td>
+<td class='normal' valign='top'>Kian</td>
+<td class='normal' valign='top'>Weimann</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>47</td>
+<td class='normal' valign='top'>Madelynn</td>
+<td class='normal' valign='top'>Hahn</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>48</td>
+<td class='normal' valign='top'>Hassie</td>
+<td class='normal' valign='top'>Monahan</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>49</td>
+<td class='normal' valign='top'>Taryn</td>
+<td class='normal' valign='top'>Kuvalis</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>50</td>
+<td class='normal' valign='top'>Hollis</td>
+<td class='normal' valign='top'>Padberg</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>51</td>
+<td class='normal' valign='top'>Henriette</td>
+<td class='normal' valign='top'>Lindgren</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>52</td>
+<td class='normal' valign='top'>Keven</td>
+<td class='normal' valign='top'>DuBuque</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>53</td>
+<td class='normal' valign='top'>Chaz</td>
+<td class='normal' valign='top'>Yundt</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>54</td>
+<td class='normal' valign='top'>Rosalee</td>
+<td class='normal' valign='top'>Dickens</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>55</td>
+<td class='normal' valign='top'>Kip</td>
+<td class='normal' valign='top'>Schoen</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>56</td>
+<td class='normal' valign='top'>Louie</td>
+<td class='normal' valign='top'>Spencer</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>57</td>
+<td class='normal' valign='top'>Priscilla</td>
+<td class='normal' valign='top'>Daniel</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>58</td>
+<td class='normal' valign='top'>Dean</td>
+<td class='normal' valign='top'>Satterfield</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>59</td>
+<td class='normal' valign='top'>Prudence</td>
+<td class='normal' valign='top'>Shields</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>60</td>
+<td class='normal' valign='top'>Elaina</td>
+<td class='normal' valign='top'>Buckridge</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>61</td>
+<td class='normal' valign='top'>Monserrat</td>
+<td class='normal' valign='top'>Conner</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>62</td>
+<td class='normal' valign='top'>Ramona</td>
+<td class='normal' valign='top'>Davis</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>63</td>
+<td class='normal' valign='top'>Eldridge</td>
+<td class='normal' valign='top'>Wilkinson</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>64</td>
+<td class='normal' valign='top'>Emanuel</td>
+<td class='normal' valign='top'>Reinger</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>65</td>
+<td class='normal' valign='top'>Janis</td>
+<td class='normal' valign='top'>Stamm</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>66</td>
+<td class='normal' valign='top'>Nannie</td>
+<td class='normal' valign='top'>Streich</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>67</td>
+<td class='normal' valign='top'>Elva</td>
+<td class='normal' valign='top'>Sawayn</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>68</td>
+<td class='normal' valign='top'>Ava</td>
+<td class='normal' valign='top'>Nolan</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>69</td>
+<td class='normal' valign='top'>Westley</td>
+<td class='normal' valign='top'>Predovic</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>70</td>
+<td class='normal' valign='top'>Antonina</td>
+<td class='normal' valign='top'>Ferry</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>71</td>
+<td class='normal' valign='top'>Jeffery</td>
+<td class='normal' valign='top'>Lowe</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>72</td>
+<td class='normal' valign='top'>Cesar</td>
+<td class='normal' valign='top'>Schmitt</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>73</td>
+<td class='normal' valign='top'>Letha</td>
+<td class='normal' valign='top'>Beatty</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>74</td>
+<td class='normal' valign='top'>Benton</td>
+<td class='normal' valign='top'>Rogahn</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>75</td>
+<td class='normal' valign='top'>Braden</td>
+<td class='normal' valign='top'>Shields</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>76</td>
+<td class='normal' valign='top'>Luther</td>
+<td class='normal' valign='top'>Turcotte</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>77</td>
+<td class='normal' valign='top'>Patricia</td>
+<td class='normal' valign='top'>Gleason</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>78</td>
+<td class='normal' valign='top'>Delta</td>
+<td class='normal' valign='top'>Kerluke</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>79</td>
+<td class='normal' valign='top'>Thurman</td>
+<td class='normal' valign='top'>Rutherford</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>80</td>
+<td class='normal' valign='top'>Willie</td>
+<td class='normal' valign='top'>Fritsch</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>81</td>
+<td class='normal' valign='top'>Letitia</td>
+<td class='normal' valign='top'>Marks</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>82</td>
+<td class='normal' valign='top'>Ada</td>
+<td class='normal' valign='top'>Kuvalis</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>83</td>
+<td class='normal' valign='top'>Josie</td>
+<td class='normal' valign='top'>Kunde</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>84</td>
+<td class='normal' valign='top'>Harmony</td>
+<td class='normal' valign='top'>Lesch</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>85</td>
+<td class='normal' valign='top'>Kelsie</td>
+<td class='normal' valign='top'>Olson</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>86</td>
+<td class='normal' valign='top'>Lucile</td>
+<td class='normal' valign='top'>Rolfson</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>87</td>
+<td class='normal' valign='top'>Celestino</td>
+<td class='normal' valign='top'>Cruickshank</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>88</td>
+<td class='normal' valign='top'>Hayley</td>
+<td class='normal' valign='top'>Vandervort</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>89</td>
+<td class='normal' valign='top'>Royal</td>
+<td class='normal' valign='top'>DuBuque</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>90</td>
+<td class='normal' valign='top'>Adrian</td>
+<td class='normal' valign='top'>Mills</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>91</td>
+<td class='normal' valign='top'>Roosevelt</td>
+<td class='normal' valign='top'>Tromp</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>92</td>
+<td class='normal' valign='top'>Miguel</td>
+<td class='normal' valign='top'>Watsica</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>93</td>
+<td class='normal' valign='top'>Gregory</td>
+<td class='normal' valign='top'>Jenkins</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>94</td>
+<td class='normal' valign='top'>Kristina</td>
+<td class='normal' valign='top'>Jast</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>95</td>
+<td class='normal' valign='top'>Ozella</td>
+<td class='normal' valign='top'>Hauck</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>96</td>
+<td class='normal' valign='top'>Emmet</td>
+<td class='normal' valign='top'>Hammes</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>97</td>
+<td class='normal' valign='top'>Eleonore</td>
+<td class='normal' valign='top'>Ward</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>98</td>
+<td class='normal' valign='top'>Lori</td>
+<td class='normal' valign='top'>Koch</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>99</td>
+<td class='normal' valign='top'>Sam</td>
+<td class='normal' valign='top'>Kuphal</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>100</td>
+<td class='normal' valign='top'>Pearl</td>
+<td class='normal' valign='top'>Prohaska</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+</table>
+</body></html>
+
+---
+
+1. **Создайте представление, в которое попадет информация о пользователях (имя, фамилия, город и пол), которые не старше 20 лет.**
+
+![Пример решения](./adults_users_20.PNG "Пользователи не старше 20 лет")
+
+---
+
+2. **Найдите кол-во, отправленных сообщений каждым пользователем и выведите ранжированный список пользователей, указав имя и фамилию пользователя, количество отправленных сообщений и место в рейтинге (первое место у пользователя с максимальным количеством сообщений). Используйте DENSE_RANK.**
+
+[Пример решения отдельной страницей](./rating_user_messages.html "Рейтинг пользователей по сообщениям")
+
+**_Таблица с выборкой_**
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"><title>Data</title>
+</head>
+<body>
+<table border=1>
+<tr>
+<td bgcolor=silver class='medium'>firstname</td>
+<td bgcolor=silver class='medium'>lastname</td>
+<td bgcolor=silver class='medium'>message_count</td>
+<td bgcolor=silver class='medium'>ranking</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>Jaida</td>
+<td class='normal' valign='top'>Kilback</td>
+<td class='normal' valign='top'>10</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>Reuben</td>
+<td class='normal' valign='top'>Nienow</td>
+<td class='normal' valign='top'>5</td>
+<td class='normal' valign='top'>2</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>Norene</td>
+<td class='normal' valign='top'>West</td>
+<td class='normal' valign='top'>3</td>
+<td class='normal' valign='top'>3</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>Frederik</td>
+<td class='normal' valign='top'>Upton</td>
+<td class='normal' valign='top'>2</td>
+<td class='normal' valign='top'>4</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>Unique</td>
+<td class='normal' valign='top'>Windler</td>
+<td class='normal' valign='top'>1</td>
+<td class='normal' valign='top'>5</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>Mireya</td>
+<td class='normal' valign='top'>Orn</td>
+<td class='normal' valign='top'>1</td>
+<td class='normal' valign='top'>5</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>Jordyn</td>
+<td class='normal' valign='top'>Jerde</td>
+<td class='normal' valign='top'>1</td>
+<td class='normal' valign='top'>5</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>Thad</td>
+<td class='normal' valign='top'>McDermott</td>
+<td class='normal' valign='top'>1</td>
+<td class='normal' valign='top'>5</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>Aiden</td>
+<td class='normal' valign='top'>Runolfsdottir</td>
+<td class='normal' valign='top'>1</td>
+<td class='normal' valign='top'>5</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>Bernadette</td>
+<td class='normal' valign='top'>Haag</td>
+<td class='normal' valign='top'>1</td>
+<td class='normal' valign='top'>5</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>Golden</td>
+<td class='normal' valign='top'>Wisozk</td>
+<td class='normal' valign='top'>1</td>
+<td class='normal' valign='top'>5</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>Elisa</td>
+<td class='normal' valign='top'>Balistreri</td>
+<td class='normal' valign='top'>1</td>
+<td class='normal' valign='top'>5</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>Reed</td>
+<td class='normal' valign='top'>Bogan</td>
+<td class='normal' valign='top'>1</td>
+<td class='normal' valign='top'>5</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>Gwendolyn</td>
+<td class='normal' valign='top'>McClure</td>
+<td class='normal' valign='top'>1</td>
+<td class='normal' valign='top'>5</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>Selmer</td>
+<td class='normal' valign='top'>Quitzon</td>
+<td class='normal' valign='top'>1</td>
+<td class='normal' valign='top'>5</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>Margarete</td>
+<td class='normal' valign='top'>Koepp</td>
+<td class='normal' valign='top'>1</td>
+<td class='normal' valign='top'>5</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>Donavon</td>
+<td class='normal' valign='top'>Bauch</td>
+<td class='normal' valign='top'>1</td>
+<td class='normal' valign='top'>5</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>Ashlynn</td>
+<td class='normal' valign='top'>Cummerata</td>
+<td class='normal' valign='top'>1</td>
+<td class='normal' valign='top'>5</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>Fletcher</td>
+<td class='normal' valign='top'>Lang</td>
+<td class='normal' valign='top'>1</td>
+<td class='normal' valign='top'>5</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>Amiya</td>
+<td class='normal' valign='top'>Leuschke</td>
+<td class='normal' valign='top'>1</td>
+<td class='normal' valign='top'>5</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>Terrance</td>
+<td class='normal' valign='top'>West</td>
+<td class='normal' valign='top'>1</td>
+<td class='normal' valign='top'>5</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>Keara</td>
+<td class='normal' valign='top'>Kiehn</td>
+<td class='normal' valign='top'>1</td>
+<td class='normal' valign='top'>5</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>Wyatt</td>
+<td class='normal' valign='top'>Olson</td>
+<td class='normal' valign='top'>1</td>
+<td class='normal' valign='top'>5</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>Paula</td>
+<td class='normal' valign='top'>Shields</td>
+<td class='normal' valign='top'>1</td>
+<td class='normal' valign='top'>5</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>Ivah</td>
+<td class='normal' valign='top'>Bernier</td>
+<td class='normal' valign='top'>1</td>
+<td class='normal' valign='top'>5</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>Liza</td>
+<td class='normal' valign='top'>Howe</td>
+<td class='normal' valign='top'>1</td>
+<td class='normal' valign='top'>5</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>Kevon</td>
+<td class='normal' valign='top'>Gerhold</td>
+<td class='normal' valign='top'>1</td>
+<td class='normal' valign='top'>5</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>Hermina</td>
+<td class='normal' valign='top'>Lubowitz</td>
+<td class='normal' valign='top'>1</td>
+<td class='normal' valign='top'>5</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>Cara</td>
+<td class='normal' valign='top'>Quigley</td>
+<td class='normal' valign='top'>1</td>
+<td class='normal' valign='top'>5</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>Kian</td>
+<td class='normal' valign='top'>Weimann</td>
+<td class='normal' valign='top'>1</td>
+<td class='normal' valign='top'>5</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>Madelynn</td>
+<td class='normal' valign='top'>Hahn</td>
+<td class='normal' valign='top'>1</td>
+<td class='normal' valign='top'>5</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>Hassie</td>
+<td class='normal' valign='top'>Monahan</td>
+<td class='normal' valign='top'>1</td>
+<td class='normal' valign='top'>5</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>Taryn</td>
+<td class='normal' valign='top'>Kuvalis</td>
+<td class='normal' valign='top'>1</td>
+<td class='normal' valign='top'>5</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>Hollis</td>
+<td class='normal' valign='top'>Padberg</td>
+<td class='normal' valign='top'>1</td>
+<td class='normal' valign='top'>5</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>Henriette</td>
+<td class='normal' valign='top'>Lindgren</td>
+<td class='normal' valign='top'>1</td>
+<td class='normal' valign='top'>5</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>Keven</td>
+<td class='normal' valign='top'>DuBuque</td>
+<td class='normal' valign='top'>1</td>
+<td class='normal' valign='top'>5</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>Chaz</td>
+<td class='normal' valign='top'>Yundt</td>
+<td class='normal' valign='top'>1</td>
+<td class='normal' valign='top'>5</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>Rosalee</td>
+<td class='normal' valign='top'>Dickens</td>
+<td class='normal' valign='top'>1</td>
+<td class='normal' valign='top'>5</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>Kip</td>
+<td class='normal' valign='top'>Schoen</td>
+<td class='normal' valign='top'>1</td>
+<td class='normal' valign='top'>5</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>Louie</td>
+<td class='normal' valign='top'>Spencer</td>
+<td class='normal' valign='top'>1</td>
+<td class='normal' valign='top'>5</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>Priscilla</td>
+<td class='normal' valign='top'>Daniel</td>
+<td class='normal' valign='top'>1</td>
+<td class='normal' valign='top'>5</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>Dean</td>
+<td class='normal' valign='top'>Satterfield</td>
+<td class='normal' valign='top'>1</td>
+<td class='normal' valign='top'>5</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>Prudence</td>
+<td class='normal' valign='top'>Shields</td>
+<td class='normal' valign='top'>1</td>
+<td class='normal' valign='top'>5</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>Elaina</td>
+<td class='normal' valign='top'>Buckridge</td>
+<td class='normal' valign='top'>1</td>
+<td class='normal' valign='top'>5</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>Monserrat</td>
+<td class='normal' valign='top'>Conner</td>
+<td class='normal' valign='top'>1</td>
+<td class='normal' valign='top'>5</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>Ramona</td>
+<td class='normal' valign='top'>Davis</td>
+<td class='normal' valign='top'>1</td>
+<td class='normal' valign='top'>5</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>Eldridge</td>
+<td class='normal' valign='top'>Wilkinson</td>
+<td class='normal' valign='top'>1</td>
+<td class='normal' valign='top'>5</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>Emanuel</td>
+<td class='normal' valign='top'>Reinger</td>
+<td class='normal' valign='top'>1</td>
+<td class='normal' valign='top'>5</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>Janis</td>
+<td class='normal' valign='top'>Stamm</td>
+<td class='normal' valign='top'>1</td>
+<td class='normal' valign='top'>5</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>Nannie</td>
+<td class='normal' valign='top'>Streich</td>
+<td class='normal' valign='top'>1</td>
+<td class='normal' valign='top'>5</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>Elva</td>
+<td class='normal' valign='top'>Sawayn</td>
+<td class='normal' valign='top'>1</td>
+<td class='normal' valign='top'>5</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>Ava</td>
+<td class='normal' valign='top'>Nolan</td>
+<td class='normal' valign='top'>1</td>
+<td class='normal' valign='top'>5</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>Westley</td>
+<td class='normal' valign='top'>Predovic</td>
+<td class='normal' valign='top'>1</td>
+<td class='normal' valign='top'>5</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>Antonina</td>
+<td class='normal' valign='top'>Ferry</td>
+<td class='normal' valign='top'>1</td>
+<td class='normal' valign='top'>5</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>Jeffery</td>
+<td class='normal' valign='top'>Lowe</td>
+<td class='normal' valign='top'>1</td>
+<td class='normal' valign='top'>5</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>Cesar</td>
+<td class='normal' valign='top'>Schmitt</td>
+<td class='normal' valign='top'>1</td>
+<td class='normal' valign='top'>5</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>Letha</td>
+<td class='normal' valign='top'>Beatty</td>
+<td class='normal' valign='top'>1</td>
+<td class='normal' valign='top'>5</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>Benton</td>
+<td class='normal' valign='top'>Rogahn</td>
+<td class='normal' valign='top'>1</td>
+<td class='normal' valign='top'>5</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>Braden</td>
+<td class='normal' valign='top'>Shields</td>
+<td class='normal' valign='top'>1</td>
+<td class='normal' valign='top'>5</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>Luther</td>
+<td class='normal' valign='top'>Turcotte</td>
+<td class='normal' valign='top'>1</td>
+<td class='normal' valign='top'>5</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>Patricia</td>
+<td class='normal' valign='top'>Gleason</td>
+<td class='normal' valign='top'>1</td>
+<td class='normal' valign='top'>5</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>Delta</td>
+<td class='normal' valign='top'>Kerluke</td>
+<td class='normal' valign='top'>1</td>
+<td class='normal' valign='top'>5</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>Thurman</td>
+<td class='normal' valign='top'>Rutherford</td>
+<td class='normal' valign='top'>1</td>
+<td class='normal' valign='top'>5</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>Willie</td>
+<td class='normal' valign='top'>Fritsch</td>
+<td class='normal' valign='top'>1</td>
+<td class='normal' valign='top'>5</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>Letitia</td>
+<td class='normal' valign='top'>Marks</td>
+<td class='normal' valign='top'>1</td>
+<td class='normal' valign='top'>5</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>Ada</td>
+<td class='normal' valign='top'>Kuvalis</td>
+<td class='normal' valign='top'>1</td>
+<td class='normal' valign='top'>5</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>Josie</td>
+<td class='normal' valign='top'>Kunde</td>
+<td class='normal' valign='top'>1</td>
+<td class='normal' valign='top'>5</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>Harmony</td>
+<td class='normal' valign='top'>Lesch</td>
+<td class='normal' valign='top'>1</td>
+<td class='normal' valign='top'>5</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>Kelsie</td>
+<td class='normal' valign='top'>Olson</td>
+<td class='normal' valign='top'>1</td>
+<td class='normal' valign='top'>5</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>Lucile</td>
+<td class='normal' valign='top'>Rolfson</td>
+<td class='normal' valign='top'>1</td>
+<td class='normal' valign='top'>5</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>Celestino</td>
+<td class='normal' valign='top'>Cruickshank</td>
+<td class='normal' valign='top'>1</td>
+<td class='normal' valign='top'>5</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>Hayley</td>
+<td class='normal' valign='top'>Vandervort</td>
+<td class='normal' valign='top'>1</td>
+<td class='normal' valign='top'>5</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>Royal</td>
+<td class='normal' valign='top'>DuBuque</td>
+<td class='normal' valign='top'>1</td>
+<td class='normal' valign='top'>5</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>Adrian</td>
+<td class='normal' valign='top'>Mills</td>
+<td class='normal' valign='top'>1</td>
+<td class='normal' valign='top'>5</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>Roosevelt</td>
+<td class='normal' valign='top'>Tromp</td>
+<td class='normal' valign='top'>1</td>
+<td class='normal' valign='top'>5</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>Miguel</td>
+<td class='normal' valign='top'>Watsica</td>
+<td class='normal' valign='top'>1</td>
+<td class='normal' valign='top'>5</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>Gregory</td>
+<td class='normal' valign='top'>Jenkins</td>
+<td class='normal' valign='top'>1</td>
+<td class='normal' valign='top'>5</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>Kristina</td>
+<td class='normal' valign='top'>Jast</td>
+<td class='normal' valign='top'>1</td>
+<td class='normal' valign='top'>5</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>Ozella</td>
+<td class='normal' valign='top'>Hauck</td>
+<td class='normal' valign='top'>1</td>
+<td class='normal' valign='top'>5</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>Emmet</td>
+<td class='normal' valign='top'>Hammes</td>
+<td class='normal' valign='top'>1</td>
+<td class='normal' valign='top'>5</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>Eleonore</td>
+<td class='normal' valign='top'>Ward</td>
+<td class='normal' valign='top'>1</td>
+<td class='normal' valign='top'>5</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>Lori</td>
+<td class='normal' valign='top'>Koch</td>
+<td class='normal' valign='top'>1</td>
+<td class='normal' valign='top'>5</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>Sam</td>
+<td class='normal' valign='top'>Kuphal</td>
+<td class='normal' valign='top'>1</td>
+<td class='normal' valign='top'>5</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>Pearl</td>
+<td class='normal' valign='top'>Prohaska</td>
+<td class='normal' valign='top'>1</td>
+<td class='normal' valign='top'>5</td>
+</tr>
+</table>
+</body></html>
+
+
+---
+
+3. **Выберите все сообщения, отсортируйте сообщения по возрастанию даты отправления (created_at) и найдите разницу дат отправления между соседними сообщениями, получившегося списка. (используйте LEAD или LAG)**
+
+
+[Пример решения отдельной страницей](./date_difference_in_messages.html "Разница дат между сообщениями")
+
+**_Таблица с выборкой_**
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"><title>Data</title>
+</head>
+<body>
+<table border=1>
+<tr>
+<td bgcolor=silver class='medium'>id</td>
+<td bgcolor=silver class='medium'>body</td>
+<td bgcolor=silver class='medium'>created_at</td>
+<td bgcolor=silver class='medium'>days_diff</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>49</td>
+<td class='normal' valign='top'>Molestiae omnis magnam labore quidem omnis doloribus delectus. Aut a ut velit quos. Quae est omnis vel omnis omnis aut distinctio aperiam. Numquam nulla quo qui quis.</td>
+<td class='normal' valign='top'>1970-08-09 14:37:59</td>
+<td class='normal' valign='top'>NULL</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>70</td>
+<td class='normal' valign='top'>Occaecati et quisquam fugit a. Et repellendus alias quam incidunt ut tempora. Deserunt temporibus aut saepe eius excepturi.</td>
+<td class='normal' valign='top'>1970-08-11 21:33:29</td>
+<td class='normal' valign='top'>2</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>37</td>
+<td class='normal' valign='top'>Nesciunt vitae consequuntur et molestiae deleniti cupiditate nostrum. Et natus eveniet officiis voluptas voluptas magni velit. Explicabo ipsam et quis eos dolore explicabo.</td>
+<td class='normal' valign='top'>1971-09-15 21:08:26</td>
+<td class='normal' valign='top'>400</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>40</td>
+<td class='normal' valign='top'>Ab quibusdam dolor et illum quis dolore. Qui deserunt consequuntur voluptatem itaque. Expedita sit velit hic repudiandae provident culpa quisquam. Est aut rerum itaque in non et.</td>
+<td class='normal' valign='top'>1972-03-14 21:06:39</td>
+<td class='normal' valign='top'>181</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>77</td>
+<td class='normal' valign='top'>Nesciunt animi voluptatum eveniet voluptatem perferendis vel. Dolorem dolor nihil doloremque sed ut. Unde ea et numquam tenetur modi eos qui. Fuga est sapiente omnis omnis.</td>
+<td class='normal' valign='top'>1972-04-24 19:27:51</td>
+<td class='normal' valign='top'>41</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>52</td>
+<td class='normal' valign='top'>Animi et et incidunt ea sequi eaque quia. Quia laudantium est necessitatibus natus qui velit impedit vitae. Dolorum vitae eius tempore et magnam.</td>
+<td class='normal' valign='top'>1973-03-10 13:48:51</td>
+<td class='normal' valign='top'>320</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>47</td>
+<td class='normal' valign='top'>Cum reiciendis neque unde reprehenderit totam laborum porro. Voluptas sed eveniet voluptas. Qui sed consequatur exercitationem quis. Nihil velit possimus magnam cumque dolore cum nemo.</td>
+<td class='normal' valign='top'>1973-09-27 23:29:10</td>
+<td class='normal' valign='top'>201</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>6</td>
+<td class='normal' valign='top'>Rerum labore culpa et laboriosam eum totam. Quidem pariatur sit alias. Atque doloribus ratione eum rem dolor vitae saepe.</td>
+<td class='normal' valign='top'>1973-11-09 08:12:04</td>
+<td class='normal' valign='top'>43</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>57</td>
+<td class='normal' valign='top'>Voluptates consequatur et et necessitatibus soluta et. Reiciendis saepe debitis placeat autem. Aperiam soluta et commodi sint consectetur.</td>
+<td class='normal' valign='top'>1974-01-30 16:15:55</td>
+<td class='normal' valign='top'>82</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>60</td>
+<td class='normal' valign='top'>Quia sequi animi repellat. Consequatur ad soluta consequatur quo. Molestias suscipit et placeat non officiis rerum et. Voluptatibus ea veniam architecto labore aut corporis qui.</td>
+<td class='normal' valign='top'>1974-04-18 22:45:58</td>
+<td class='normal' valign='top'>78</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>27</td>
+<td class='normal' valign='top'>At ratione quae facere minima exercitationem vel ipsum ipsam. Qui eligendi repellat ut unde quos hic sit. Itaque expedita voluptatem id numquam. Provident culpa expedita alias optio ipsum id. Voluptatum quae quidem nihil aut nemo voluptatibus.</td>
+<td class='normal' valign='top'>1975-06-25 22:37:18</td>
+<td class='normal' valign='top'>433</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>95</td>
+<td class='normal' valign='top'>Est voluptatem voluptas ut asperiores expedita voluptatem. Recusandae reiciendis eos magnam fugit placeat blanditiis illo. Aliquam quis officia repellat consequatur aut consequatur voluptas.</td>
+<td class='normal' valign='top'>1975-09-22 08:07:45</td>
+<td class='normal' valign='top'>89</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>10</td>
+<td class='normal' valign='top'>Praesentium molestias quia aut odio. Est quis eius ut animi optio molestiae. Amet tempore sequi blanditiis in est.</td>
+<td class='normal' valign='top'>1976-05-22 14:38:15</td>
+<td class='normal' valign='top'>243</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>50</td>
+<td class='normal' valign='top'>Dolorem necessitatibus ullam cumque quo assumenda alias. Molestias quibusdam earum commodi placeat. Saepe voluptatem voluptatem aut.</td>
+<td class='normal' valign='top'>1976-06-06 22:03:25</td>
+<td class='normal' valign='top'>15</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>15</td>
+<td class='normal' valign='top'>Nisi rerum officiis officiis aut ad voluptates autem. Dolor nesciunt eum qui eos dignissimos culpa iste. Atque qui vitae quos odit inventore eum. Quam et voluptas quia amet.</td>
+<td class='normal' valign='top'>1977-10-13 19:40:32</td>
+<td class='normal' valign='top'>494</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>14</td>
+<td class='normal' valign='top'>Aut enim sint voluptas saepe. Ut tenetur quos rem earum sint inventore fugiat. Eaque recusandae similique earum laborum.</td>
+<td class='normal' valign='top'>1977-10-15 23:26:40</td>
+<td class='normal' valign='top'>2</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>26</td>
+<td class='normal' valign='top'>Minus tenetur molestiae laudantium est voluptatem tempora. Sed ab veniam porro similique cumque. Accusamus illo est et tempora excepturi odit.</td>
+<td class='normal' valign='top'>1977-11-04 08:02:22</td>
+<td class='normal' valign='top'>20</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>93</td>
+<td class='normal' valign='top'>Doloribus aliquid incidunt et architecto ipsa est sapiente. In nesciunt quia et quo expedita. Possimus qui voluptatum fuga eum ut.</td>
+<td class='normal' valign='top'>1979-10-07 18:50:35</td>
+<td class='normal' valign='top'>702</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>58</td>
+<td class='normal' valign='top'>Libero eos incidunt ipsum omnis sit quisquam dolores doloribus. Doloremque nobis repellat sit vel totam molestias. Minus quasi qui labore tenetur molestiae est assumenda.</td>
+<td class='normal' valign='top'>1979-10-08 08:07:50</td>
+<td class='normal' valign='top'>1</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>35</td>
+<td class='normal' valign='top'>Voluptatem aperiam omnis ut sed nulla. Autem optio eligendi et corrupti.</td>
+<td class='normal' valign='top'>1980-07-24 15:48:57</td>
+<td class='normal' valign='top'>290</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>53</td>
+<td class='normal' valign='top'>Enim in minima dolores possimus odio quia. Officia qui quis laudantium ea dolor omnis. Dolores nihil optio exercitationem optio nihil exercitationem laboriosam est. Enim quasi qui dolorem sit tempora labore laboriosam.</td>
+<td class='normal' valign='top'>1982-11-18 08:42:29</td>
+<td class='normal' valign='top'>847</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>94</td>
+<td class='normal' valign='top'>Qui deleniti omnis officiis. Maiores ducimus quisquam inventore iusto totam est deserunt voluptates. Quasi reprehenderit excepturi vel aut ullam.</td>
+<td class='normal' valign='top'>1983-09-13 00:31:43</td>
+<td class='normal' valign='top'>299</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>84</td>
+<td class='normal' valign='top'>Consequuntur atque ut officiis est laudantium sapiente quia. Ut atque at corrupti autem. Consequatur repudiandae consequatur ut eligendi ipsam eum vero.</td>
+<td class='normal' valign='top'>1984-08-20 04:11:47</td>
+<td class='normal' valign='top'>342</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>79</td>
+<td class='normal' valign='top'>Et aut earum aut dolores enim sequi. Quo cumque dolorum eos qui vel expedita quo. Est libero labore et tempore. Temporibus deleniti ipsa ea ea possimus accusamus maxime.</td>
+<td class='normal' valign='top'>1984-10-24 22:39:24</td>
+<td class='normal' valign='top'>65</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>74</td>
+<td class='normal' valign='top'>Ipsam debitis eligendi labore error minima inventore quia. Minus et minima ut. Consequatur consectetur corporis et laborum impedit.</td>
+<td class='normal' valign='top'>1985-10-05 19:13:28</td>
+<td class='normal' valign='top'>346</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>4</td>
+<td class='normal' valign='top'>Quod dicta omnis placeat id et officiis et. Beatae enim aut aliquid neque occaecati odit. Facere eum distinctio assumenda omnis est delectus magnam.</td>
+<td class='normal' valign='top'>1985-11-25 16:56:25</td>
+<td class='normal' valign='top'>51</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>76</td>
+<td class='normal' valign='top'>Ut placeat ad ab tempore. Temporibus itaque distinctio hic laboriosam eum asperiores quibusdam placeat. Aut sit ut est perspiciatis beatae omnis. Ad et aperiam dolorem voluptatem molestiae quia eos.</td>
+<td class='normal' valign='top'>1986-03-25 09:53:35</td>
+<td class='normal' valign='top'>120</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>48</td>
+<td class='normal' valign='top'>Dolorum dignissimos ipsa tempore enim. Aliquam ex labore exercitationem odio id dignissimos eaque. Aperiam cupiditate alias ut rerum asperiores et.</td>
+<td class='normal' valign='top'>1986-05-03 10:04:03</td>
+<td class='normal' valign='top'>39</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>22</td>
+<td class='normal' valign='top'>Minus praesentium ipsum iusto ipsum et a nobis. Aut distinctio enim dolor suscipit et. Quia culpa molestiae architecto quod. Error nulla qui et harum sapiente maxime qui sed.</td>
+<td class='normal' valign='top'>1986-07-17 11:23:56</td>
+<td class='normal' valign='top'>75</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>34</td>
+<td class='normal' valign='top'>Quia magnam reprehenderit libero fugiat. Voluptatem id qui incidunt nihil et voluptatem quos dicta. Corrupti et ut ratione quos architecto omnis. Accusamus quo aliquam hic sit quia illum.</td>
+<td class='normal' valign='top'>1987-01-09 11:35:59</td>
+<td class='normal' valign='top'>176</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>61</td>
+<td class='normal' valign='top'>Aut ab numquam non commodi aut. Assumenda adipisci hic tenetur. Possimus delectus dicta ab id dolores.</td>
+<td class='normal' valign='top'>1987-10-17 16:11:13</td>
+<td class='normal' valign='top'>281</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>72</td>
+<td class='normal' valign='top'>Aperiam nobis odit omnis culpa. Ex esse tempora et error. Animi doloribus ut dolores dolorum quos facilis. Vel cupiditate sint cum est et. Quasi quo aut et consequatur repellat odit ut.</td>
+<td class='normal' valign='top'>1988-02-29 05:32:01</td>
+<td class='normal' valign='top'>135</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>66</td>
+<td class='normal' valign='top'>Temporibus voluptates ipsa placeat est dolorum. Mollitia aut laboriosam consequuntur amet asperiores maxime aspernatur distinctio. Incidunt est voluptatem ipsam provident optio dignissimos praesentium. Dolores quis laudantium ut beatae voluptas blanditiis est.</td>
+<td class='normal' valign='top'>1988-03-02 21:17:37</td>
+<td class='normal' valign='top'>2</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>65</td>
+<td class='normal' valign='top'>Alias voluptatem odit aliquid possimus id est. Aliquid excepturi soluta deserunt vel quidem voluptatem ipsam. Natus ex quis neque unde est. Molestias possimus sint quos sed quo.</td>
+<td class='normal' valign='top'>1988-05-14 20:25:46</td>
+<td class='normal' valign='top'>73</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>96</td>
+<td class='normal' valign='top'>Non sunt maxime nisi impedit dolores. Aliquid vero et facilis a. Non maiores quos dolores saepe similique maxime.</td>
+<td class='normal' valign='top'>1988-12-01 15:08:45</td>
+<td class='normal' valign='top'>201</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>12</td>
+<td class='normal' valign='top'>Quo asperiores et id veritatis placeat. Aperiam ut sit exercitationem iste vel nisi fugit quia. Suscipit labore error ducimus quaerat distinctio quae quasi.</td>
+<td class='normal' valign='top'>1989-05-13 22:39:47</td>
+<td class='normal' valign='top'>163</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>86</td>
+<td class='normal' valign='top'>Aut vero dolore hic et reiciendis omnis. Nesciunt quis aut odit quam. Reprehenderit omnis molestiae ipsa vero laboriosam totam consectetur cumque. Facere et qui dolore ut architecto reprehenderit.</td>
+<td class='normal' valign='top'>1989-05-22 06:13:52</td>
+<td class='normal' valign='top'>9</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>68</td>
+<td class='normal' valign='top'>Et aut libero odit id. Occaecati doloribus et quam excepturi eveniet esse.</td>
+<td class='normal' valign='top'>1990-05-02 19:23:36</td>
+<td class='normal' valign='top'>345</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>99</td>
+<td class='normal' valign='top'>Maiores ut accusantium rerum. Expedita consequuntur et placeat vero ea eligendi et eum. Et distinctio at beatae quis ut ut rerum. In repellat corrupti adipisci quaerat repellat quas illo.</td>
+<td class='normal' valign='top'>1990-06-30 05:56:22</td>
+<td class='normal' valign='top'>59</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>82</td>
+<td class='normal' valign='top'>Aut quas animi sed quis. Autem explicabo totam accusamus. Sapiente in sunt in dolores. Totam est repellendus voluptas.</td>
+<td class='normal' valign='top'>1990-08-26 13:57:28</td>
+<td class='normal' valign='top'>57</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>100</td>
+<td class='normal' valign='top'>Molestiae molestiae non doloribus temporibus minima. Eaque sapiente ex assumenda. Eveniet dolorum iure qui mollitia repudiandae vel. Labore quos qui necessitatibus.</td>
+<td class='normal' valign='top'>1991-05-20 07:06:14</td>
+<td class='normal' valign='top'>267</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>80</td>
+<td class='normal' valign='top'>Voluptas nemo aliquam pariatur sequi dolorem officia molestiae. Cupiditate ut ab necessitatibus odio suscipit quo.</td>
+<td class='normal' valign='top'>1991-05-25 00:05:39</td>
+<td class='normal' valign='top'>5</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>38</td>
+<td class='normal' valign='top'>Atque deleniti voluptas labore veniam quas ipsam voluptatem. Similique facere qui est quaerat est et. Incidunt corporis aut deleniti aut excepturi.</td>
+<td class='normal' valign='top'>1991-12-06 22:30:58</td>
+<td class='normal' valign='top'>195</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>97</td>
+<td class='normal' valign='top'>Tempore aliquid aut ipsa. Ea sunt modi non ducimus eum sed ea. Sint aliquid nihil ipsam est cumque velit earum. Voluptas qui inventore eius et facere placeat nemo.</td>
+<td class='normal' valign='top'>1992-04-14 11:30:54</td>
+<td class='normal' valign='top'>130</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>51</td>
+<td class='normal' valign='top'>Tenetur aut nobis pariatur et accusamus est eos deserunt. Non quia ratione aspernatur. Perspiciatis doloremque adipisci qui et animi. Aut quis in non.</td>
+<td class='normal' valign='top'>1992-04-30 20:58:57</td>
+<td class='normal' valign='top'>16</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>81</td>
+<td class='normal' valign='top'>Occaecati possimus ipsum velit dolorum in ipsam. Hic laudantium eligendi pariatur deserunt molestias. Esse doloribus nemo odio aperiam illum.</td>
+<td class='normal' valign='top'>1992-06-19 09:18:21</td>
+<td class='normal' valign='top'>50</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>69</td>
+<td class='normal' valign='top'>Rerum qui deleniti et dolorum quae. Voluptates repudiandae aliquid at repellat. At delectus rerum aut qui qui. Accusantium suscipit blanditiis aut tenetur quae et ut. Fugit dolorem veritatis quam corrupti odio sint voluptatem impedit.</td>
+<td class='normal' valign='top'>1992-11-20 08:57:16</td>
+<td class='normal' valign='top'>154</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>17</td>
+<td class='normal' valign='top'>Iste deserunt in et et. Corrupti rerum a veritatis harum. Ratione consequatur est ut deserunt dolores.</td>
+<td class='normal' valign='top'>1993-01-30 15:51:38</td>
+<td class='normal' valign='top'>71</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>3</td>
+<td class='normal' valign='top'>Sed mollitia quo sequi nisi est tenetur at rerum. Sed quibusdam illo ea facilis nemo sequi. Et tempora repudiandae saepe quo.</td>
+<td class='normal' valign='top'>1993-09-14 19:45:58</td>
+<td class='normal' valign='top'>227</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>59</td>
+<td class='normal' valign='top'>Tempore vero voluptatem mollitia qui suscipit iusto suscipit. Aut consectetur accusamus provident consequatur officiis. Amet fugit voluptatibus dolorem reiciendis voluptatem cupiditate quia.</td>
+<td class='normal' valign='top'>1994-08-20 09:12:31</td>
+<td class='normal' valign='top'>340</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>54</td>
+<td class='normal' valign='top'>Quam tempora accusantium ullam doloribus eveniet ut. Qui dolores ut et. Molestiae velit dolorem vel similique neque.</td>
+<td class='normal' valign='top'>1995-03-14 17:47:23</td>
+<td class='normal' valign='top'>206</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>1</td>
+<td class='normal' valign='top'>Voluptatem ut quaerat quia. Pariatur esse amet ratione qui quia. In necessitatibus reprehenderit et. Nam accusantium aut qui quae nesciunt non.</td>
+<td class='normal' valign='top'>1995-08-28 22:44:29</td>
+<td class='normal' valign='top'>167</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>33</td>
+<td class='normal' valign='top'>Blanditiis incidunt fugiat itaque animi impedit modi ratione at. Excepturi vel hic enim quidem aut ullam facilis. Ipsum aut maxime deserunt doloremque.</td>
+<td class='normal' valign='top'>1996-01-15 13:05:37</td>
+<td class='normal' valign='top'>140</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>11</td>
+<td class='normal' valign='top'>Molestiae laudantium quibusdam porro est alias placeat assumenda. Ut consequatur rerum officiis exercitationem eveniet. Qui eum maxime sed in.</td>
+<td class='normal' valign='top'>1996-04-27 00:23:37</td>
+<td class='normal' valign='top'>103</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>18</td>
+<td class='normal' valign='top'>Dicta non inventore autem incidunt accusamus amet distinctio. Aut laborum nam ab maxime. Maxime minima blanditiis et neque. Et laboriosam qui at deserunt magnam.</td>
+<td class='normal' valign='top'>1996-05-19 14:18:39</td>
+<td class='normal' valign='top'>22</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>90</td>
+<td class='normal' valign='top'>Beatae et adipisci dolorem. Consequatur ut tenetur nulla dolor corporis vero.</td>
+<td class='normal' valign='top'>1996-07-08 15:22:44</td>
+<td class='normal' valign='top'>50</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>43</td>
+<td class='normal' valign='top'>Nostrum aspernatur enim cum iure ut neque similique ut. Labore repudiandae eum inventore est consequatur. Non sed ea incidunt laboriosam ea itaque porro. Esse culpa id explicabo odio consequatur unde voluptatum.</td>
+<td class='normal' valign='top'>1997-02-17 15:31:00</td>
+<td class='normal' valign='top'>224</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>13</td>
+<td class='normal' valign='top'>Earum sunt quia sed harum modi accusamus. Quia dolor laboriosam asperiores aliquam quia. Sint id quasi et cumque qui minima ut quo. Autem sed laudantium officiis sit sit.</td>
+<td class='normal' valign='top'>1997-09-30 00:06:14</td>
+<td class='normal' valign='top'>225</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>7</td>
+<td class='normal' valign='top'>Perspiciatis temporibus doloribus debitis. Et inventore labore eos modi. Quo temporibus corporis minus. Accusamus aspernatur nihil nobis placeat molestiae et commodi eaque.</td>
+<td class='normal' valign='top'>1998-04-09 00:00:26</td>
+<td class='normal' valign='top'>191</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>16</td>
+<td class='normal' valign='top'>Consequatur ut et repellat non voluptatem nihil veritatis. Vel deleniti omnis et consequuntur. Et doloribus reprehenderit sed earum quas velit labore.</td>
+<td class='normal' valign='top'>1998-05-24 10:09:36</td>
+<td class='normal' valign='top'>45</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>44</td>
+<td class='normal' valign='top'>Magni ex dolor enim assumenda sit modi molestiae. Est quis aliquam ut id aliquam eveniet est. Fuga quaerat neque tenetur. Nihil reprehenderit necessitatibus ut quo nam excepturi.</td>
+<td class='normal' valign='top'>1998-06-20 05:03:15</td>
+<td class='normal' valign='top'>27</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>85</td>
+<td class='normal' valign='top'>Explicabo fugit consequatur non. Ex qui culpa amet. Accusamus consequatur sed quia qui nihil quia.</td>
+<td class='normal' valign='top'>1998-08-07 18:07:35</td>
+<td class='normal' valign='top'>48</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>19</td>
+<td class='normal' valign='top'>Amet ad dolorum distinctio excepturi possimus quia. Adipisci veniam porro ipsum ipsum tempora est blanditiis. Magni ut quia eius qui.</td>
+<td class='normal' valign='top'>1998-08-12 04:42:34</td>
+<td class='normal' valign='top'>5</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>64</td>
+<td class='normal' valign='top'>Consectetur ad nihil tenetur iusto. Possimus qui quibusdam id ut. Sunt molestias quidem quisquam eligendi natus. Assumenda magnam laborum harum nemo qui nisi.</td>
+<td class='normal' valign='top'>1998-10-18 18:46:37</td>
+<td class='normal' valign='top'>67</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>55</td>
+<td class='normal' valign='top'>Dolore molestias aut sit cum. Libero tempora laboriosam mollitia saepe. Ipsa voluptatum itaque sequi dolorem. Ipsam sint sequi perferendis odio amet dicta optio fugit.</td>
+<td class='normal' valign='top'>1999-07-08 10:32:41</td>
+<td class='normal' valign='top'>263</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>5</td>
+<td class='normal' valign='top'>Voluptas omnis enim quia porro debitis facilis eaque ut. Id inventore non corrupti doloremque consequuntur. Molestiae molestiae deleniti exercitationem sunt qui ea accusamus deserunt.</td>
+<td class='normal' valign='top'>1999-09-19 04:35:46</td>
+<td class='normal' valign='top'>73</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>98</td>
+<td class='normal' valign='top'>Quasi velit non fugiat. Neque porro molestiae est et architecto. Voluptatem ipsa in beatae nihil voluptatem quidem. Minus est in autem saepe.</td>
+<td class='normal' valign='top'>1999-11-20 22:33:47</td>
+<td class='normal' valign='top'>62</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>67</td>
+<td class='normal' valign='top'>Minus necessitatibus voluptate molestiae eius. Illo consequatur aliquam dolore fugit nemo est beatae beatae.</td>
+<td class='normal' valign='top'>2001-09-08 17:21:02</td>
+<td class='normal' valign='top'>658</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>42</td>
+<td class='normal' valign='top'>Similique accusantium voluptatem perferendis dignissimos et inventore qui. Est aspernatur et voluptas occaecati officiis dolores numquam. Ut amet quas natus voluptatibus.</td>
+<td class='normal' valign='top'>2001-11-06 03:19:29</td>
+<td class='normal' valign='top'>59</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>23</td>
+<td class='normal' valign='top'>Explicabo nostrum eius cum molestiae. Et deserunt aut consectetur molestiae. Illo veritatis sed ab.</td>
+<td class='normal' valign='top'>2002-06-22 15:10:59</td>
+<td class='normal' valign='top'>228</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>29</td>
+<td class='normal' valign='top'>Molestias ratione tenetur sint. Vel rerum voluptas vel vitae et aut non autem. Distinctio sunt in dignissimos esse eligendi praesentium. Ut totam autem vel sapiente architecto et.</td>
+<td class='normal' valign='top'>2003-01-11 19:37:45</td>
+<td class='normal' valign='top'>203</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>45</td>
+<td class='normal' valign='top'>Quaerat eum sequi consequatur perferendis in libero. Nulla facilis sed facere natus. Harum aut incidunt quia harum aut beatae aspernatur. Perferendis dolor et ut corporis blanditiis.</td>
+<td class='normal' valign='top'>2004-04-20 20:20:36</td>
+<td class='normal' valign='top'>465</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>39</td>
+<td class='normal' valign='top'>Placeat eos est animi voluptatem quas dolore. Dolor minima rem corporis perspiciatis. Nemo est autem voluptate est.</td>
+<td class='normal' valign='top'>2004-10-09 10:37:23</td>
+<td class='normal' valign='top'>172</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>63</td>
+<td class='normal' valign='top'>Eligendi qui iusto non. Rerum amet aut tempore expedita ut assumenda perspiciatis. Id ut nemo quis. Sit quia repellendus et minus.</td>
+<td class='normal' valign='top'>2005-02-27 23:18:23</td>
+<td class='normal' valign='top'>141</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>46</td>
+<td class='normal' valign='top'>Expedita quia similique praesentium placeat. Harum omnis perspiciatis occaecati odio. Enim consequatur sequi ut hic deserunt odit quos.</td>
+<td class='normal' valign='top'>2005-06-30 22:41:30</td>
+<td class='normal' valign='top'>123</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>8</td>
+<td class='normal' valign='top'>Suscipit dolore voluptas et sit vero et sint. Rem ut ratione voluptatum assumenda nesciunt ea. Quas qui qui atque ut. Similique et praesentium non voluptate iure. Eum aperiam officia quia dolorem.</td>
+<td class='normal' valign='top'>2005-08-20 18:40:27</td>
+<td class='normal' valign='top'>51</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>71</td>
+<td class='normal' valign='top'>Sint quo natus ut odit corrupti laboriosam iure molestias. Quod repudiandae consequuntur quas et dolore expedita. Iste dolorem eius officiis. Deleniti magni iusto autem vero.</td>
+<td class='normal' valign='top'>2005-10-16 03:28:41</td>
+<td class='normal' valign='top'>57</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>25</td>
+<td class='normal' valign='top'>Non deserunt quis non illum. In vel exercitationem dolore reiciendis non animi sequi cumque. Officia et repellat in aut voluptas. Dignissimos sed voluptatem minima eligendi. Magnam porro omnis mollitia aspernatur error quia.</td>
+<td class='normal' valign='top'>2006-06-16 19:28:59</td>
+<td class='normal' valign='top'>243</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>36</td>
+<td class='normal' valign='top'>Omnis dolor dignissimos vel tempora. Quia explicabo iste tempora delectus esse. Laudantium molestiae recusandae laboriosam quam.</td>
+<td class='normal' valign='top'>2007-01-31 14:18:23</td>
+<td class='normal' valign='top'>229</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>28</td>
+<td class='normal' valign='top'>Nam dignissimos nobis qui qui voluptate. Dolor voluptas praesentium quis tenetur deleniti dolorem incidunt. Cupiditate qui nam excepturi.</td>
+<td class='normal' valign='top'>2007-03-22 10:13:05</td>
+<td class='normal' valign='top'>50</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>24</td>
+<td class='normal' valign='top'>Excepturi consequatur ducimus voluptatum. Est sed perferendis ducimus officia et. Qui nemo sapiente harum rerum.</td>
+<td class='normal' valign='top'>2007-09-14 22:06:16</td>
+<td class='normal' valign='top'>176</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>21</td>
+<td class='normal' valign='top'>Architecto sunt asperiores modi. A commodi non qui.</td>
+<td class='normal' valign='top'>2007-10-22 01:34:17</td>
+<td class='normal' valign='top'>38</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>89</td>
+<td class='normal' valign='top'>Velit tenetur qui ratione dolore non. Ad omnis totam aliquid quos.</td>
+<td class='normal' valign='top'>2008-01-26 14:29:48</td>
+<td class='normal' valign='top'>96</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>56</td>
+<td class='normal' valign='top'>Inventore facere perferendis nostrum est. Aut eos laborum iusto itaque tenetur. Dicta nihil maxime necessitatibus ut nihil. Enim ab et quo aperiam.</td>
+<td class='normal' valign='top'>2008-10-15 17:57:56</td>
+<td class='normal' valign='top'>263</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>31</td>
+<td class='normal' valign='top'>Voluptatum totam inventore numquam dolor mollitia. Qui explicabo ut commodi culpa libero quisquam. Doloribus consequuntur rerum in nesciunt quia consequuntur ut.</td>
+<td class='normal' valign='top'>2009-02-23 05:02:06</td>
+<td class='normal' valign='top'>131</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>30</td>
+<td class='normal' valign='top'>Perferendis in eius architecto debitis exercitationem. Optio deleniti ad dolor sapiente soluta. Quisquam deserunt autem amet magni quasi quo dolores. Expedita ea omnis omnis sint.</td>
+<td class='normal' valign='top'>2010-04-13 15:06:20</td>
+<td class='normal' valign='top'>414</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>73</td>
+<td class='normal' valign='top'>Incidunt exercitationem qui amet explicabo natus ipsam repudiandae. Quod fugiat dolor qui eum sit est. Magni eum odit et eos consequatur id.</td>
+<td class='normal' valign='top'>2010-04-18 01:08:09</td>
+<td class='normal' valign='top'>5</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>87</td>
+<td class='normal' valign='top'>Qui omnis a assumenda tempora assumenda. Consequatur nihil dolorem veritatis qui dolores vel.</td>
+<td class='normal' valign='top'>2010-08-08 17:23:39</td>
+<td class='normal' valign='top'>112</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>88</td>
+<td class='normal' valign='top'>Consequatur repudiandae voluptas ex ea. Commodi non officiis culpa quos. Eum id sed voluptatibus.</td>
+<td class='normal' valign='top'>2011-03-01 02:20:15</td>
+<td class='normal' valign='top'>205</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>75</td>
+<td class='normal' valign='top'>Explicabo tenetur illo sint corporis dolore. Vitae quos quia qui hic natus deserunt facere sit. Molestiae enim animi libero qui. Quis accusamus itaque quas qui cumque qui.</td>
+<td class='normal' valign='top'>2012-03-29 11:54:19</td>
+<td class='normal' valign='top'>394</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>62</td>
+<td class='normal' valign='top'>Eos amet ut qui tempora saepe totam. Velit ut quis ut quia. Est id eos et commodi nihil. Rerum saepe quia consequatur laborum delectus suscipit velit.</td>
+<td class='normal' valign='top'>2012-11-25 07:00:39</td>
+<td class='normal' valign='top'>241</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>9</td>
+<td class='normal' valign='top'>Et quia libero aut vitae minus. Rerum a blanditiis debitis sit nam. Veniam quasi aut autem ratione dolorem. Sunt quo similique dolorem odit totam sint sed.</td>
+<td class='normal' valign='top'>2013-03-19 04:10:10</td>
+<td class='normal' valign='top'>114</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>20</td>
+<td class='normal' valign='top'>Porro aperiam voluptate quo eos nobis. Qui blanditiis cum id eos. Est sit reprehenderit consequatur eum corporis. Molestias quia quo sit architecto aut.</td>
+<td class='normal' valign='top'>2013-11-01 05:14:05</td>
+<td class='normal' valign='top'>227</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>78</td>
+<td class='normal' valign='top'>Recusandae laudantium debitis modi perspiciatis mollitia aliquid saepe culpa. In molestiae dolore nesciunt. Sint dolorem velit aliquid saepe dolorum iure voluptatem.</td>
+<td class='normal' valign='top'>2014-07-19 03:46:12</td>
+<td class='normal' valign='top'>260</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>92</td>
+<td class='normal' valign='top'>Ipsa sunt voluptatem animi optio qui. Eum autem quam et accusantium fuga autem voluptatem. Laborum illum dignissimos ut et qui sed. Est hic nesciunt quo iusto dolor soluta maxime.</td>
+<td class='normal' valign='top'>2014-11-15 17:19:35</td>
+<td class='normal' valign='top'>119</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>91</td>
+<td class='normal' valign='top'>Quia est natus assumenda explicabo fugit atque. Ea sit maiores quod repellendus molestiae. Qui consectetur qui aut ipsa corporis dolore architecto corporis.</td>
+<td class='normal' valign='top'>2015-12-29 19:09:22</td>
+<td class='normal' valign='top'>409</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>41</td>
+<td class='normal' valign='top'>Quasi porro esse voluptate aut quia quo cupiditate. Nihil dolorem neque ut est quibusdam. Eius labore quidem rerum animi eligendi sapiente. Quo dolor voluptates fugit sed eos ipsam illo quia.</td>
+<td class='normal' valign='top'>2017-04-22 21:50:21</td>
+<td class='normal' valign='top'>480</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>32</td>
+<td class='normal' valign='top'>Delectus animi laboriosam magnam. Dolor a qui numquam et. Magnam rerum exercitationem officiis numquam.</td>
+<td class='normal' valign='top'>2017-06-21 05:19:41</td>
+<td class='normal' valign='top'>60</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>83</td>
+<td class='normal' valign='top'>Harum non ea incidunt accusamus fugit voluptatibus. Totam voluptatibus inventore dolorum odit.</td>
+<td class='normal' valign='top'>2017-08-01 23:04:18</td>
+<td class='normal' valign='top'>41</td>
+</tr>
+
+<tr>
+<td class='normal' valign='top'>2</td>
+<td class='normal' valign='top'>Sint dolores et debitis est ducimus. Aut et quia beatae minus. Ipsa rerum totam modi sunt sed. Voluptas atque eum et odio ea molestias ipsam architecto.</td>
+<td class='normal' valign='top'>2023-07-05 15:07:18</td>
+<td class='normal' valign='top'>2164</td>
+</tr>
+</table>
+</body></html>
+
+---
+
+[В начало](#урок-5)
